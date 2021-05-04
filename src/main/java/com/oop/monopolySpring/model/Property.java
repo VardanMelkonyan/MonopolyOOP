@@ -9,6 +9,7 @@ public abstract class Property {
     private boolean mortgaged;
     private final PGroup group;
     private Player owner;
+    private String ownerName;
 
     public enum PGroup {
         COLORED, UTILITY, RAIL_ROAD
@@ -64,6 +65,7 @@ public abstract class Property {
 
     public void setOwner(Player owner) {
         this.owner = owner;
+        this.ownerName = owner.getName();
     }
 
     public void sell(Player newOwner, int cost) throws NotEnoughMoneyException {
@@ -71,7 +73,7 @@ public abstract class Property {
         owner.addBalance(cost);
         owner.removeProperty(this);
         newOwner.addProperty(this);
-        this.owner = newOwner;
+        setOwner(newOwner);
     }
     
     public void payRent(Player player) throws NotEnoughMoneyException {
@@ -81,7 +83,10 @@ public abstract class Property {
 
     public void reset() {
         owner = null;
+        ownerName = null;
     }
 
-
+    public String getOwnerName() {
+        return ownerName;
+    }
 }
