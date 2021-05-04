@@ -170,7 +170,7 @@ public class Player {
 
     // Method that helps player to move
     public void move(int steps) throws OutOfBoardBoundsException, NotEnoughMoneyException,
-            InvalidPositionException, CardNotFoundException {
+            InvalidPositionException, CardNotFoundException, InvalidParamException {
         if ((position + steps) > 39) {
             this.addBalance(200);
             System.out.println("You passed GO, get $200");
@@ -220,13 +220,17 @@ public class Player {
     }
 
     //Method that buys a property
-    public void buyProperty(Property property) throws NotEnoughMoneyException {
+    public void buyProperty(Property property) throws NotEnoughMoneyException, InvalidParamException {
+        if (property.isTaken())
+            throw new InvalidParamException("The Property has an owner");
         this.subtractBalance(property.getPrice());
         this.properties.add(property);
         property.setOwner(this);
     }
 
-    public void buyProperty(Property property, int amount) throws NotEnoughMoneyException {
+    public void buyProperty(Property property, int amount) throws NotEnoughMoneyException, InvalidParamException {
+        if (property.isTaken())
+            throw new InvalidParamException("The Property has an owner");
         this.subtractBalance(amount);
         this.properties.add(property);
         property.setOwner(this);
@@ -246,7 +250,7 @@ public class Player {
         receiver.addBalance(amount);
     }
 
-    public void roll() throws NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+    public void roll() throws NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         int steps = Dice.rollDice();
         System.out.println("The rolled number is " + steps + ", " + this.name);
         if (Dice.isLastIsDouble()) {
