@@ -2,6 +2,8 @@ package com.oop.monopolySpring.service;
 
 import com.oop.monopolySpring.exceptions.*;
 import com.oop.monopolySpring.model.*;
+import com.oop.monopolySpring.model.identifiers.PlayerIdentifier;
+import com.oop.monopolySpring.model.identifiers.TradeIdentifier;
 import com.oop.monopolySpring.storage.GameStorage;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class GameService {
     }
 
     public int[] roll(PlayerIdentifier player) throws NotYourTurnException, NotEnoughMoneyException,
-            InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+            InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         if (!GameStorage.getGame().getPlayerWithIdentifier(player).isTurn())
             throw new NotYourTurnException();
         GameStorage.getGame().getCurrentPlayer().roll();
@@ -62,22 +64,23 @@ public class GameService {
         return false;
     }
 
-    public void buyProperty(PlayerIdentifier player, int propertyIndex) throws NotEnoughMoneyException {
-        Player p = GameStorage.getGame().getPlayerWithIdentifier(player);
+    public Property buyProperty(Player player, int propertyIndex) throws NotEnoughMoneyException, InvalidParamException {
         Property property = Board.getPropertyAtIndex(propertyIndex);
-        p.buyProperty(property);
+        player.buyProperty(property);
+        return property;
     }
 
-    public void buyWithAuction(PlayerIdentifier player, int propertyIndex, int amount) throws NotEnoughMoneyException {
-        Player p = GameStorage.getGame().getPlayerWithIdentifier(player);
+    public Property buyWithAuction(Player player, int propertyIndex, int amount) throws NotEnoughMoneyException, InvalidParamException {
         Property property = Board.getPropertyAtIndex(propertyIndex);
-        p.buyProperty(property, amount);
+        player.buyProperty(property, amount);
+        return property;
     }
 
-    public void buildHoseOrHotel(int propertyIndex) throws InvalidParamException, NotEnoughMoneyException {
+    public Property buildHoseOrHotel(int propertyIndex) throws InvalidParamException, NotEnoughMoneyException {
         try {
             ColoredProperty property = (ColoredProperty) Board.getPropertyAtIndex(propertyIndex);
             property.buildHouse();
+            return property;
         } catch (NotEnoughMoneyException e) {
             throw e;
         } catch (Exception e) {
@@ -85,13 +88,21 @@ public class GameService {
         }
     }
 
-    public void sellHouseOrHotel(int propertyIndex) throws InvalidParamException {
+    public Property sellHouseOrHotel(int propertyIndex) throws InvalidParamException {
         try {
             ColoredProperty property = (ColoredProperty) Board.getPropertyAtIndex(propertyIndex);
             property.sellHouseOrHotel();
+            return property;
         } catch (Exception e) {
             throw new InvalidParamException("Invalid property index");
         }
     }
+
+    public Game trade(TradeIdentifier trade) throws InvalidParamException, NotEnoughMoneyException {
+        Bank.trade(trade.getPropertyAtIndex1(), trade.getPropertyAtIndex2(), trade.getAmount1(), trade.getAmount2(), trade.getPlayer1().getPlayer(), trade.getPlayer2().getPlayer());
+        return GameStorage.getGame();
+    }
+
+
 }
 
