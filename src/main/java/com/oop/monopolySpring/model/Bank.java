@@ -1,6 +1,7 @@
 package com.oop.monopolySpring.model;
 
 
+import com.oop.monopolySpring.exceptions.InvalidParamException;
 import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
 import com.oop.monopolySpring.storage.GameStorage;
 
@@ -10,8 +11,29 @@ import java.util.Scanner;
 public class Bank {
     private static Scanner scan = new Scanner(System.in);
 
-    public static void trade(Property property1, Property property2, int amount1, int amount2, Player player1, Player player2) {
+    public static void trade(Property givingProperty, Property receivingProperty, int givingAmount, int receivingAmount, Player giver, Player receiver) throws InvalidParamException, NotEnoughMoneyException {
+        if(!giver.getProperties().contains(givingProperty) || !receiver.getProperties().contains(receivingProperty))
+            throw new InvalidParamException("The player does not own the specified property!");
+        if (givingProperty == null && receivingProperty == null)
+            throw new InvalidParamException("You cannot trade only money");
 
+        if (givingProperty != null)
+            givingProperty.sell(receiver, receivingAmount);
+        else
+            receiver.pay(giver, receivingAmount);
+
+        try {
+            if (receivingProperty != null)
+                receivingProperty.sell(giver, givingAmount);
+            else
+                giver.pay(receiver, givingAmount);
+        } catch (NotEnoughMoneyException e){
+            if (givingProperty != null)
+                givingProperty.sell(giver, givingAmount);
+            else
+                giver.pay(receiver, receivingAmount);
+            throw e;
+        }
     }
 
     private static Bet askForBet(Player player) {
@@ -40,7 +62,7 @@ public class Bank {
         }
     }
 
-    public static void setAuction(Property property) throws NotEnoughMoneyException {
+    public static void setAuction(Property property) throws NotEnoughMoneyException, InvalidParamException {
         if (!property.isTaken()) {
             ArrayList<Bet> bets = new ArrayList<Bet>();
             System.out.println("The following property is being auctioned. Please make your bets");
