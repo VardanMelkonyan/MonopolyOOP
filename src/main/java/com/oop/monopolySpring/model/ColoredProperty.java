@@ -1,5 +1,6 @@
 package com.oop.monopolySpring.model;
 
+import com.oop.monopolySpring.exceptions.InvalidParamException;
 import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
 import com.oop.monopolySpring.storage.GameStorage;
 
@@ -26,12 +27,12 @@ public class ColoredProperty extends Property {
         return numberOfHouses;
     }
 
-    public void buildHouse() throws NotEnoughMoneyException {
+    public void buildHouse() throws NotEnoughMoneyException, InvalidParamException {
         if (numberOfHouses == 5)
             return;
         for (int index : color.sameColorPs) {
             if (Board.getPropertyAtIndex(index).getOwner() != getOwner())
-                return;
+                throw new InvalidParamException("You need to own all of the same color properties");
         }
         if (numberOfHouses < 4 && GameStorage.getGame().getRemainingNumberOfHouses() == 0)
             return;
@@ -47,16 +48,25 @@ public class ColoredProperty extends Property {
         }
     }
 
-    public void sellHouseOrHotel() {
+    public void sellHouseOrHotel() throws InvalidParamException {
         if (numberOfHouses == 5) {
             getOwner().addBalance(5 * housePrice / 2);
             GameStorage.getGame().decreaseRemainingNumberOfHotels(-1);
             numberOfHouses = 0;
+            return;
         } else if (numberOfHouses > 0) {
             getOwner().addBalance(housePrice / 2);
             GameStorage.getGame().decreaseRemainingNumberOfHouses(-1);
             numberOfHouses--;
+            return;
         }
+        throw new InvalidParamException("There are no houses or hotels on this property");
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        numberOfHouses = 0;
     }
 
     public enum Color {
