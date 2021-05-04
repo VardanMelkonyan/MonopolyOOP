@@ -2,10 +2,9 @@ package com.oop.monopolySpring.controller;
 
 import com.oop.monopolySpring.exceptions.GameInitializationException;
 import com.oop.monopolySpring.exceptions.InvalidParamException;
-import com.oop.monopolySpring.model.Game;
-import com.oop.monopolySpring.model.GameConstructor;
-import com.oop.monopolySpring.model.Player;
-import com.oop.monopolySpring.model.PlayerIdentifier;
+import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
+import com.oop.monopolySpring.model.*;
+import com.oop.monopolySpring.model.identifiers.*;
 import com.oop.monopolySpring.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class GameController {
     }
 
     @GetMapping("/game-exists")
-    public ResponseEntity<Boolean> getGameId(@RequestParam(value = "gameId", defaultValue = "0") int gameId){
+    public ResponseEntity<Boolean> getGameStatus(@RequestParam(value = "gameId", defaultValue = "0") int gameId){
         return ResponseEntity.ok(gameService.gameExists(gameId));
     }
 
@@ -44,8 +43,44 @@ public class GameController {
 
     @GetMapping("/get-player")
     public ResponseEntity<Player> getPlayer(@RequestParam(name = "name") String name, @RequestParam(name = "figureName") String figureName) {
-        System.out.println(name + ", " + figureName);
         return ResponseEntity.ok(gameService.getPlayer(new PlayerIdentifier(name, figureName)));
+    }
+
+    @GetMapping("/is-in-jail")
+    public ResponseEntity<Boolean> isInJail(@RequestParam(name = "name") String name, @RequestParam(name = "figureName") String figureName) throws InvalidParamException {
+        return ResponseEntity.ok(gameService.isInJail(new PlayerIdentifier(name, figureName)));
+    }
+
+
+    @PostMapping("/get-out-of-jail")
+    public ResponseEntity<Boolean> getOutOfJail(@RequestBody PlayerIdentifier player) throws NotEnoughMoneyException {
+        return ResponseEntity.ok(gameService.getOutOfJail(player));
+    }
+
+    @PostMapping("/buy-property")
+    public ResponseEntity<Property> buyProperty(@RequestBody BuyPropertyIdentifier buyPropertyIdentifier) throws NotEnoughMoneyException, InvalidParamException {
+        return ResponseEntity.ok(gameService.buyProperty(buyPropertyIdentifier.getPlayer(), buyPropertyIdentifier.getPropertyIndex()));
+    }
+
+    @PostMapping("/buy-property-auction")
+    public ResponseEntity<Property> buyWithAuction(@RequestBody BuyPropertyWithAuctionIdentifier buyPropertyWithAuctionIdentifier) throws NotEnoughMoneyException, InvalidParamException {
+        return ResponseEntity.ok(gameService.buyWithAuction(buyPropertyWithAuctionIdentifier.getPlayer(), buyPropertyWithAuctionIdentifier.getPropertyIndex(), buyPropertyWithAuctionIdentifier.getAmount()));
+    }
+
+    @PostMapping("/build-house-hotel")
+    public ResponseEntity<Property> buildHoseOrHotel(@RequestParam(name = "propertyIndex") int propertyIndex) throws NotEnoughMoneyException, InvalidParamException {
+        return ResponseEntity.ok(gameService.buildHoseOrHotel(propertyIndex));
+    }
+
+    @PostMapping("/sell-house-hotel")
+    public ResponseEntity<Property> sellHoseOrHotel(@RequestParam(name = "propertyIndex") int propertyIndex) throws NotEnoughMoneyException, InvalidParamException {
+        return ResponseEntity.ok(gameService.sellHouseOrHotel(propertyIndex));
+    }
+
+    @PostMapping("/trade")
+    public ResponseEntity<Game> trade(@RequestBody TradeIdentifier tradeIdentifier) throws InvalidParamException, NotEnoughMoneyException {
+        Game game = gameService.trade(tradeIdentifier);
+        return ResponseEntity.ok(game);
     }
 
 }

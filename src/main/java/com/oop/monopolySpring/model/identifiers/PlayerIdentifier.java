@@ -1,5 +1,7 @@
 package com.oop.monopolySpring.model;
 
+import com.oop.monopolySpring.storage.GameStorage;
+
 public class PlayerIdentifier {
 
     private String name;
@@ -28,5 +30,8 @@ public class PlayerIdentifier {
 
     public boolean compareToPlayer(Player player) {
         return name.equals(player.getName()) && figureName.equals(player.getFigure().name());
+    }
+    public Player getPlayer(){
+        return GameStorage.getGame().getPlayerWithIdentifier(this);
     }
 }
