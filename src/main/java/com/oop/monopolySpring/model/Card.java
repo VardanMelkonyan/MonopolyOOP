@@ -1,9 +1,6 @@
 package com.oop.monopolySpring.model;
 
-import com.oop.monopolySpring.exceptions.CardNotFoundException;
-import com.oop.monopolySpring.exceptions.InvalidPositionException;
-import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
-import com.oop.monopolySpring.exceptions.OutOfBoardBoundsException;
+import com.oop.monopolySpring.exceptions.*;
 import com.oop.monopolySpring.storage.GameStorage;
 
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ public interface Card {
         }
     }
 
-    default void goToBoardwalk(Player player) throws NotEnoughMoneyException {
+    default void goToBoardwalk(Player player) throws NotEnoughMoneyException, InvalidParamException {
         player.setPosition(39);
         ColoredProperty p = (ColoredProperty) Board.getPropertyAtIndex(player.getPosition());
         if (!p.isTaken())
@@ -38,7 +35,7 @@ public interface Card {
             player.pay(p.getOwner(), 2 * p.getRent());
     }
 
-    default void goToReadingRailroad(Player player) throws NotEnoughMoneyException {
+    default void goToReadingRailroad(Player player) throws NotEnoughMoneyException, InvalidParamException {
         // position cannot be before reading railroad(no need for check)
         player.addBalance(200);
         player.setPosition(5);
@@ -77,7 +74,7 @@ public interface Card {
         player.setPosition(24);
     }
 
-    default void goToNearestUtility(Player player) throws NotEnoughMoneyException {
+    default void goToNearestUtility(Player player) throws NotEnoughMoneyException, InvalidParamException {
         if (player.getPosition() == 22 || player.getPosition() == 36) {
             player.setPosition(28);
         } else {
@@ -94,7 +91,7 @@ public interface Card {
 
     }
 
-    default void goToNearestRailroad(Player player) throws InvalidPositionException, NotEnoughMoneyException {
+    default void goToNearestRailroad(Player player) throws InvalidPositionException, NotEnoughMoneyException, InvalidParamException {
         switch (player.getPosition()) {
             case 7:
                 player.setPosition(5);
@@ -124,7 +121,7 @@ public interface Card {
     }
 
     default void goBack3Spaces(Player player) throws NotEnoughMoneyException,
-            InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+            InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         player.move(-3);
     }
 

@@ -41,7 +41,7 @@ public enum Chance implements Card{
         Collections.shuffle(chances);
     }
 
-    public static void getChance(Player player) throws NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+    public static void getChance(Player player) throws NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         Chance myChance = chances.get(0);
         System.out.println("According to your chance card you should " + myChance.getDescription());
         myChance.chanceAction(player);
@@ -50,7 +50,7 @@ public enum Chance implements Card{
     }
 
     private void chanceAction(Player player) throws NotEnoughMoneyException, InvalidPositionException,
-            CardNotFoundException, OutOfBoardBoundsException {
+            CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         switch (id) {
             case 0 -> goToGo(player);
             case 1 -> goToIllinois(player);
