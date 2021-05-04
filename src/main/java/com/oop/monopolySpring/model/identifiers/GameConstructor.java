@@ -1,4 +1,6 @@
-package com.oop.monopolySpring.model;
+package com.oop.monopolySpring.model.identifiers;
+
+import com.oop.monopolySpring.model.identifiers.PlayerIdentifier;
 
 public class GameConstructor {
     private final int gameId;

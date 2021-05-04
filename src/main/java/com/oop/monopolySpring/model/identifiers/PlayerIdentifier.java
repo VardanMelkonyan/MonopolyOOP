@@ -1,5 +1,6 @@
-package com.oop.monopolySpring.model;
+package com.oop.monopolySpring.model.identifiers;
 
+import com.oop.monopolySpring.model.Player;
 import com.oop.monopolySpring.storage.GameStorage;
 
 public class PlayerIdentifier {
