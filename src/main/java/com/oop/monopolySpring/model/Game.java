@@ -1,6 +1,7 @@
 package com.oop.monopolySpring.model;
 
 import com.oop.monopolySpring.exceptions.*;
+import com.oop.monopolySpring.model.identifiers.PlayerIdentifier;
 import com.oop.monopolySpring.storage.GameStorage;
 
 import java.util.ArrayList;
@@ -11,12 +12,14 @@ public class Game {
     protected ArrayList<Player> players = new ArrayList<Player>();
     private int remainingNumberOfHouses;
     private int remainingNumberOfHotels;
+    private final Property[] properties;
     private int turn;
 
     public Game(Player[] players) throws GameInitializationException {
         remainingNumberOfHotels = 12;
         remainingNumberOfHouses = 32;
         Board.setup();
+        properties = Board.getProperties();
         Chance.init();
         CommunityChest.init();
         turn = 0;
@@ -26,7 +29,7 @@ public class Game {
         GameStorage.setGame(this);
     }
 
-    public static void buyOrNot(Player player, Property property) throws NotEnoughMoneyException {
+    public static void buyOrNot(Player player, Property property) throws NotEnoughMoneyException, InvalidParamException {
         Scanner scan = new Scanner(System.in);
         System.out.print("Do you want to buy " + property.getName() + " " + player.getName() + "?: ");
         String answer = scan.next().toUpperCase().trim();
@@ -46,7 +49,7 @@ public class Game {
             System.out.println( "It is " + currentPlayer.getName() +"'s turn. $" + currentPlayer.getBalance()); /// Demo
             try {
                 currentPlayer.roll();
-            } catch (CardNotFoundException | InvalidPositionException | NotEnoughMoneyException e) {
+            } catch (CardNotFoundException | InvalidPositionException | NotEnoughMoneyException | InvalidParamException e) {
                 System.err.println(e.getMessage());
             }
             System.out.println();
@@ -90,5 +93,9 @@ public class Game {
             }
         System.out.println("Didnt found");
         return null;
+    }
+
+    public Property[] getProperties() {
+        return properties;
     }
 }
