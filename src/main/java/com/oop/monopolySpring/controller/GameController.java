@@ -1,8 +1,6 @@
 package com.oop.monopolySpring.controller;
 
-import com.oop.monopolySpring.exceptions.GameInitializationException;
-import com.oop.monopolySpring.exceptions.InvalidParamException;
-import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
+import com.oop.monopolySpring.exceptions.*;
 import com.oop.monopolySpring.model.*;
 import com.oop.monopolySpring.model.identifiers.*;
 import com.oop.monopolySpring.service.GameService;
@@ -10,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/mono")
 public class GameController {
     private final GameService gameService;
@@ -83,4 +82,9 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
+    @PostMapping("/roll")
+    public ResponseEntity<Game> roll(@RequestBody PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, NotYourTurnException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+        Game game = gameService.roll(playerIdentifier);
+        return ResponseEntity.ok(game);
+    }
 }

@@ -13,6 +13,7 @@ public class Game {
     private int remainingNumberOfHouses;
     private int remainingNumberOfHotels;
     private final Property[] properties;
+    private int[] lastRoll;
     private int turn;
 
     public Game(Player[] players) throws GameInitializationException {
@@ -23,6 +24,7 @@ public class Game {
         Chance.init();
         CommunityChest.init();
         turn = 0;
+        lastRoll = new int[2];
         if (players.length > 4)
             throw new GameInitializationException();
         this.players.addAll(Arrays.asList(players));
@@ -83,6 +85,14 @@ public class Game {
 
     public Player getCurrentPlayer(){
         return players.get(turn);
+    }
+
+    public int[] getLastRoll() {
+        return lastRoll;
+    }
+
+    public void setLastRoll(int[] lastRoll) {
+        this.lastRoll = lastRoll;
     }
 
     public Player getPlayerWithIdentifier(PlayerIdentifier player){

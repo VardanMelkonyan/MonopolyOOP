@@ -36,12 +36,12 @@ public class GameService {
         return GameStorage.getGame().getCurrentPlayer();
     }
 
-    public int[] roll(PlayerIdentifier player) throws NotYourTurnException, NotEnoughMoneyException,
+    public Game roll(PlayerIdentifier player) throws NotYourTurnException, NotEnoughMoneyException,
             InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
         if (!GameStorage.getGame().getPlayerWithIdentifier(player).isTurn())
             throw new NotYourTurnException();
         GameStorage.getGame().getCurrentPlayer().roll();
-        return Dice.getDice();
+        return GameStorage.getGame();
     }
 
     public boolean isInJail(PlayerIdentifier player) throws InvalidParamException {
@@ -103,6 +103,27 @@ public class GameService {
         return GameStorage.getGame();
     }
 
+    //-------------------------------Move Actions----------------------------
 
+    public Chance getChance(PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+        Player player = playerIdentifier.getPlayer();
+        return Chance.getChance(player);
+    }
+
+    public CommunityChest getCommunityCard(PlayerIdentifier playerIdentifier) throws NotEnoughMoneyException, CardNotFoundException{
+        Player player = playerIdentifier.getPlayer();
+        return CommunityChest.getCommunityCard(player);
+    }
+
+    public Game goToJail(PlayerIdentifier playerIdentifier){
+        Player player = playerIdentifier.getPlayer();
+        player.goToJail();
+        return GameStorage.getGame();
+    }
+
+    public  Game payTax(PlayerIdentifier playerIdentifier, int amount) throws NotEnoughMoneyException {
+        Player player = playerIdentifier.getPlayer();
+        player.subtractBalance(amount, true);
+        return GameStorage.getGame();
+    }
 }
-
