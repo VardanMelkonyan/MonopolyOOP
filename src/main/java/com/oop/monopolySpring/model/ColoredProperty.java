@@ -26,6 +26,9 @@ public class ColoredProperty extends Property {
     public int getNumberOfHouses() {
         return numberOfHouses;
     }
+    public int getHousePrice(){
+        return this.housePrice;
+    }
 
     public void buildHouse() throws NotEnoughMoneyException, InvalidParamException {
         if (numberOfHouses == 5)
@@ -84,6 +87,7 @@ public class ColoredProperty extends Property {
         Color(int... indexes) {
             sameColorPs = indexes;
         }
+
     }
 
 }

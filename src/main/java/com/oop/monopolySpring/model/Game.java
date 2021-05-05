@@ -88,7 +88,6 @@ public class Game {
     public Player getPlayerWithIdentifier(PlayerIdentifier player){
         for (Player p : this.players)
             if (player.compareToPlayer(p)) {
-                System.out.println("found player");
                 return p;
             }
         System.out.println("Didnt found");

@@ -83,4 +83,9 @@ public class GameController {
         return ResponseEntity.ok(game);
     }
 
+    @GetMapping("/check-for-bankruptcy")
+    public ResponseEntity<Boolean> checkForBankruptcy(@RequestParam(name = "name") String name, @RequestParam(name = "figureName") String figureName, @RequestParam(name = "debtAmount") int debtAmount) {
+        return ResponseEntity.ok(gameService.checkForBankruptcy(new PlayerIdentifier(name, figureName), debtAmount));
+    }
+
 }

@@ -103,6 +103,12 @@ public class GameService {
         return GameStorage.getGame();
     }
 
+    public boolean checkForBankruptcy(PlayerIdentifier playerIdentifier, int debtAmount) {
+        Player player = playerIdentifier.getPlayer();
+        int fortune = Bank.checkFortune(player);
+
+        return debtAmount > fortune;
+    }
 
 }
 
