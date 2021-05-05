@@ -51,7 +51,7 @@ public class Game {
             System.out.println( "It is " + currentPlayer.getName() +"'s turn. $" + currentPlayer.getBalance()); /// Demo
             try {
                 currentPlayer.roll();
-            } catch (CardNotFoundException | InvalidPositionException | NotEnoughMoneyException | InvalidParamException e) {
+            } catch (NotEnoughMoneyException e) {
                 System.err.println(e.getMessage());
             }
             System.out.println();
@@ -91,6 +91,10 @@ public class Game {
         return lastRoll;
     }
 
+    public void nextPlayer() {
+        turn = (turn < players.size() - 1 ? turn + 1 : 0);
+    }
+
     public void setLastRoll(int[] lastRoll) {
         this.lastRoll = lastRoll;
     }
@@ -98,7 +102,6 @@ public class Game {
     public Player getPlayerWithIdentifier(PlayerIdentifier player){
         for (Player p : this.players)
             if (player.compareToPlayer(p)) {
-                System.out.println("found player");
                 return p;
             }
         System.out.println("Didnt found");

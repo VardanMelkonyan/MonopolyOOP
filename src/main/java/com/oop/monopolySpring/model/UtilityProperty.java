@@ -3,8 +3,8 @@ package com.oop.monopolySpring.model;
 public class UtilityProperty extends Property{
     private final int pairIndex;
 
-    public UtilityProperty(String name, int pairIndex) {
-        super(name, 150, 75, PGroup.UTILITY);
+    public UtilityProperty(int position, String name, int pairIndex) {
+        super(position, name, 150, 75, PGroup.UTILITY);
         this.pairIndex = pairIndex;
     }
 

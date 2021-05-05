@@ -41,6 +41,7 @@ public class GameService {
         if (!GameStorage.getGame().getPlayerWithIdentifier(player).isTurn())
             throw new NotYourTurnException();
         GameStorage.getGame().getCurrentPlayer().roll();
+
         return GameStorage.getGame();
     }
 
@@ -104,6 +105,12 @@ public class GameService {
     }
 
     //-------------------------------Move Actions----------------------------
+    public boolean checkForBankruptcy(PlayerIdentifier playerIdentifier, int debtAmount) {
+        Player player = playerIdentifier.getPlayer();
+        int fortune = Bank.checkFortune(player);
+
+        return debtAmount > fortune;
+    }
 
     public Chance getChance(PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
         Player player = playerIdentifier.getPlayer();
@@ -125,5 +132,14 @@ public class GameService {
         Player player = playerIdentifier.getPlayer();
         player.subtractBalance(amount, true);
         return GameStorage.getGame();
+    }
+
+    public boolean propertyMove(Player player, int propertyIndex) throws NotEnoughMoneyException {
+        Property p = Board.getPropertyAtIndex(propertyIndex);
+        if (!p.isMortgaged() && p.isTaken()) {
+            player.charge(p);
+            return true;
+        }
+        return false;
     }
 }

@@ -10,8 +10,8 @@ public class ColoredProperty extends Property {
     private final int housePrice;
     private int numberOfHouses;
 
-    public ColoredProperty(String name, int price, int mortgageValue, Color color, int[] rentPrice, int housePrice) {
-        super(name, price, mortgageValue, PGroup.COLORED);
+    public ColoredProperty(int position, String name, int price, int mortgageValue, Color color, int[] rentPrice, int housePrice) {
+        super(position, name, price, mortgageValue, PGroup.COLORED);
         this.color = color;
         this.rentPrice = rentPrice;
         this.housePrice = housePrice;
@@ -25,6 +25,9 @@ public class ColoredProperty extends Property {
 
     public int getNumberOfHouses() {
         return numberOfHouses;
+    }
+    public int getHousePrice(){
+        return this.housePrice;
     }
 
     public void buildHouse() throws NotEnoughMoneyException, InvalidParamException {
@@ -84,6 +87,7 @@ public class ColoredProperty extends Property {
         Color(int... indexes) {
             sameColorPs = indexes;
         }
+
     }
 
 }

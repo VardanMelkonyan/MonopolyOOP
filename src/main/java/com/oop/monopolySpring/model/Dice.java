@@ -1,5 +1,7 @@
 package com.oop.monopolySpring.model;
 
+import com.oop.monopolySpring.storage.GameStorage;
+
 public class Dice {
     private static int lastRoll = 0;
     private static boolean lastIsDouble = false;
@@ -14,6 +16,7 @@ public class Dice {
         dice[1] = randomDie();
         lastRoll = dice[0] + dice[1];
         lastIsDouble = dice[0] == dice[1];
+        GameStorage.getGame().setLastRoll(dice);
         return lastRoll;
     }
 

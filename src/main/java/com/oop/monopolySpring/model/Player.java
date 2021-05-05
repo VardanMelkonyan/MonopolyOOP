@@ -16,6 +16,7 @@ public class Player {
     private int outOfJailCards;
     private boolean inJail;
     private int daysInJail;
+    private Board.PositionType positionType;
     private int doubles;
 
     // Constructor
@@ -24,6 +25,7 @@ public class Player {
         this.setBalance(1500);
         this.properties = new ArrayList<Property>();
         this.position = 0;
+        this.positionType = Board.PositionType.GO;
         this.outOfJailCards = 0;
         this.inJail = false;
         this.doubles = 0;
@@ -51,6 +53,10 @@ public class Player {
 
     public int getPosition() {
         return position;
+    }
+
+    public Board.PositionType getPositionType() {
+        return positionType;
     }
 
     public void setPosition(int position) {
@@ -169,54 +175,54 @@ public class Player {
     }
 
     // Method that helps player to move
-    public void move(int steps) throws OutOfBoardBoundsException, NotEnoughMoneyException,
-            InvalidPositionException, CardNotFoundException, InvalidParamException {
+    public void move(int steps) throws OutOfBoardBoundsException{
         if ((position + steps) > 39) {
             this.addBalance(200);
             System.out.println("You passed GO, get $200");
         }
         position = (position + steps) % 40;
+        positionType = Board.PositionType.getPositionType(position);
 
-        switch (Board.PositionType.getPositionType(position)) {
-            case CHANCE:
-                System.out.println("You are currently on Chance unit " + this.getName()); /// Demo
-                Chance.getChance(this);
-                break;
-            case PROPERTY:
-                Property p = Board.getPropertyAtIndex(position);
-                System.out.println("You are currently on " + p.getName() + ", which costs $" + p.getPrice());
-                if (!p.isTaken())
-                    Game.buyOrNot(this, p);
-                else if (!p.isMortgaged()) {
-                    this.charge(p);
-                }
-                break;
-            case GO:
-                System.out.println("You are on GO");
-                break;
-            case PARKING:
-                System.out.println("You are on Free Parking");
-                break;
-            case JAIL:
-                System.out.println("You are just visiting Jail");
-                break;
-            case GO_TO_JAIL:
-                System.out.println("You are going to Jail");
-                this.goToJail();
-                break;
-            case INCOME_TAX:
-                System.out.println("You must pay income tax of $200");
-                this.subtractBalance(200, true);
-                break;
-            case LUXURY_TAX:
-                System.out.println("You must pay luxury tax of $100");
-                this.subtractBalance(100, true);
-                break;
-            case COMMUNITY:
-                System.out.println("You are currently on Community Chest unit " + this.getName());
-                CommunityChest.getCommunityCard(this);
-                break;
-        }
+//        switch (Board.PositionType.getPositionType(position)) {
+//            case CHANCE:
+//                System.out.println("You are currently on Chance unit " + this.getName()); /// Demo
+//                Chance.getChance(this);
+//                break;
+//            case PROPERTY:
+//                Property p = Board.getPropertyAtIndex(position);
+//                System.out.println("You are currently on " + p.getName() + ", which costs $" + p.getPrice());
+//                if (!p.isTaken())
+//                    Game.buyOrNot(this, p);
+//                else if (!p.isMortgaged()) {
+//                    this.charge(p);
+//                }
+//                break;
+//            case GO:
+//                System.out.println("You are on GO");
+//                break;
+//            case PARKING:
+//                System.out.println("You are on Free Parking");
+//                break;
+//            case JAIL:
+//                System.out.println("You are just visiting Jail");
+//                break;
+//            case GO_TO_JAIL:
+//                System.out.println("You are going to Jail");
+//                this.goToJail();
+//                break;
+//            case INCOME_TAX:
+//                System.out.println("You must pay income tax of $200");
+//                this.subtractBalance(200, true);
+//                break;
+//            case LUXURY_TAX:
+//                System.out.println("You must pay luxury tax of $100");
+//                this.subtractBalance(100, true);
+//                break;
+//            case COMMUNITY:
+//                System.out.println("You are currently on Community Chest unit " + this.getName());
+//                CommunityChest.getCommunityCard(this);
+//                break;
+//        }
     }
 
     //Method that buys a property
@@ -250,7 +256,7 @@ public class Player {
         receiver.addBalance(amount);
     }
 
-    public void roll() throws NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException, InvalidParamException {
+    public void roll() throws NotEnoughMoneyException, OutOfBoardBoundsException {
         int steps = Dice.rollDice();
         System.out.println("The rolled number is " + steps + ", " + this.name);
         if (Dice.isLastIsDouble()) {
@@ -273,8 +279,7 @@ public class Player {
             return;
         }
         move(steps);
-        if (Dice.isLastIsDouble())
-            roll();
+        if (!Dice.isLastIsDouble())
+            GameStorage.getGame().nextPlayer();
     }
-
 }

@@ -3,8 +3,8 @@ package com.oop.monopolySpring.model;
 public class RailRoadProperty extends Property{
     private final int[] pairIndexes = new int[]{5, 15, 25, 35};
 
-    public RailRoadProperty(String name) {
-        super(name, 200, 100, PGroup.RAIL_ROAD);
+    public RailRoadProperty(int position, String name) {
+        super(position, name, 200, 100, PGroup.RAIL_ROAD);
     }
 
     @Override

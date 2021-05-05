@@ -42,12 +42,13 @@ public enum CommunityChest implements Card {
         Collections.shuffle(communityCards);
     }
 
-    public static void getCommunityCard(Player player) throws NotEnoughMoneyException, CardNotFoundException {
+    public static CommunityChest getCommunityCard(Player player) throws NotEnoughMoneyException, CardNotFoundException {
         CommunityChest myCommunityCard = communityCards.get(0);
         System.out.println("According to Community Chest " + myCommunityCard.getDescription());
         myCommunityCard.communityCardAction(player);
         communityCards.remove(0);
         communityCards.add(myCommunityCard);
+        return myCommunityCard;
     }
 
     private void communityCardAction(Player player) throws NotEnoughMoneyException, CardNotFoundException {

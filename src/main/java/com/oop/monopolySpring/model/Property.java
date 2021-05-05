@@ -4,6 +4,7 @@ import com.oop.monopolySpring.exceptions.NotEnoughMoneyException;
 
 public abstract class Property {
     private final int price;
+    private final int position;
     private final String name;
     private final int mortgageValue;
     private boolean mortgaged;
@@ -15,7 +16,8 @@ public abstract class Property {
         COLORED, UTILITY, RAIL_ROAD
     }
 
-    public Property(String name, int price, int mortgageValue, PGroup group) {
+    public Property(int position,String name, int price, int mortgageValue, PGroup group) {
+        this.position = position;
         this.name = name;
         this.price = price;
         this.mortgageValue = mortgageValue;
@@ -39,6 +41,10 @@ public abstract class Property {
 
     protected Player getOwner() {
         return owner;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     public boolean isMortgaged() {

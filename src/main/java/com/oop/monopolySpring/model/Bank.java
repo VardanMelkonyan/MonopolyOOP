@@ -99,4 +99,18 @@ public class Bank {
             }
         }
     }
+
+   public static int checkFortune(Player player){
+        int sum = 0;
+
+        for (Property property : player.getProperties())
+            if(property instanceof ColoredProperty){
+                ColoredProperty coloredProperty = (ColoredProperty) property;
+                sum += (coloredProperty.getNumberOfHouses() * coloredProperty.getHousePrice())/2;
+            }
+        for (Property property : player.getProperties())
+            sum += property.getMortgageValue();
+        sum = sum + player.getBalance();
+        return sum;
+   }
 }
