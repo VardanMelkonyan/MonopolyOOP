@@ -37,6 +37,10 @@ public enum CommunityChest implements Card {
         return description;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public static void init() {
         Collections.addAll(communityCards, CommunityChest.values());
         Collections.shuffle(communityCards);

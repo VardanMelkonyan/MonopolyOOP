@@ -60,6 +60,7 @@ public abstract class Property {
     }
 
     public void setMortgaged() {
+        if (isMortgaged()) return;
         owner.addBalance(this.mortgageValue);
         this.mortgaged = true;
     }

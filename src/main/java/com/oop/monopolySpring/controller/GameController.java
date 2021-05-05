@@ -58,8 +58,9 @@ public class GameController {
     }
 
     @PostMapping("/buy-property")
-    public ResponseEntity<Property> buyProperty(@RequestBody BuyPropertyIdentifier buyPropertyIdentifier) throws NotEnoughMoneyException, InvalidParamException {
-        return ResponseEntity.ok(gameService.buyProperty(buyPropertyIdentifier.getPlayer(), buyPropertyIdentifier.getPropertyIndex()));
+    public ResponseEntity<Game> buyProperty(@RequestBody BuyPropertyIdentifier buyPropertyIdentifier) throws NotEnoughMoneyException, InvalidParamException {
+        gameService.buyProperty(buyPropertyIdentifier.getPlayer(), buyPropertyIdentifier.getPropertyIndex());
+        return ResponseEntity.ok(GameStorage.getGame());
     }
 
     @PostMapping("/buy-property-auction")
@@ -95,14 +96,14 @@ public class GameController {
     }
 
     @PostMapping("/chance")
-    public ResponseEntity<Chance> getChance(@RequestBody PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
-        Chance chance = gameService.getChance(playerIdentifier);
+    public ResponseEntity<Integer> getChance(@RequestBody PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+        int chance = gameService.getChance(playerIdentifier);
         return ResponseEntity.ok(chance);
     }
 
     @PostMapping("/community")
-    public ResponseEntity<CommunityChest> getCommunityCard(@RequestBody PlayerIdentifier playerIdentifier) throws NotEnoughMoneyException, CardNotFoundException {
-        CommunityChest card = gameService.getCommunityCard(playerIdentifier);
+    public ResponseEntity<Integer> getCommunityCard(@RequestBody PlayerIdentifier playerIdentifier) throws NotEnoughMoneyException, CardNotFoundException {
+        int card = gameService.getCommunityCard(playerIdentifier);
         return ResponseEntity.ok(card);
     }
 
@@ -122,5 +123,10 @@ public class GameController {
     public ResponseEntity<Boolean> propertyMove(@RequestBody BuyPropertyIdentifier buyPropertyIdentifier) throws NotEnoughMoneyException {
         boolean result = gameService.propertyMove(buyPropertyIdentifier.getPlayer(), buyPropertyIdentifier.getPropertyIndex());
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/mortgage")
+    public ResponseEntity<Property> mortgage(@RequestParam(name = "propertyIndex") int propertyIndex) throws InvalidParamException {
+        return ResponseEntity.ok(gameService.setMortgage(propertyIndex));
     }
 }

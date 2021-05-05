@@ -36,6 +36,10 @@ public enum Chance implements Card{
         return description;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public static void init() {
         Collections.addAll(chances, Chance.values());
         Collections.shuffle(chances);

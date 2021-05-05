@@ -66,8 +66,10 @@ public class GameService {
     }
 
     public Property buyProperty(Player player, int propertyIndex) throws NotEnoughMoneyException, InvalidParamException {
+        System.out.println("Property index: " + propertyIndex);
         Property property = Board.getPropertyAtIndex(propertyIndex);
         player.buyProperty(property);
+        System.out.println(property.getName() + " " + property.getOwnerName());
         return property;
     }
 
@@ -112,14 +114,14 @@ public class GameService {
         return debtAmount > fortune;
     }
 
-    public Chance getChance(PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
+    public int getChance(PlayerIdentifier playerIdentifier) throws InvalidParamException, NotEnoughMoneyException, InvalidPositionException, CardNotFoundException, OutOfBoardBoundsException {
         Player player = playerIdentifier.getPlayer();
-        return Chance.getChance(player);
+        return Chance.getChance(player).getId();
     }
 
-    public CommunityChest getCommunityCard(PlayerIdentifier playerIdentifier) throws NotEnoughMoneyException, CardNotFoundException{
+    public int getCommunityCard(PlayerIdentifier playerIdentifier) throws NotEnoughMoneyException, CardNotFoundException{
         Player player = playerIdentifier.getPlayer();
-        return CommunityChest.getCommunityCard(player);
+        return CommunityChest.getCommunityCard(player).getId();
     }
 
     public Game goToJail(PlayerIdentifier playerIdentifier){
@@ -135,11 +137,22 @@ public class GameService {
     }
 
     public boolean propertyMove(Player player, int propertyIndex) throws NotEnoughMoneyException {
+        System.out.println("Inedx of the p: " + propertyIndex);
         Property p = Board.getPropertyAtIndex(propertyIndex);
         if (!p.isMortgaged() && p.isTaken()) {
             player.charge(p);
             return true;
         }
         return false;
+    }
+
+    public Property setMortgage(int propertyIndex) throws InvalidParamException {
+        try {
+            Property property = Board.getPropertyAtIndex(propertyIndex);
+            property.setMortgaged();
+            return property;
+        } catch (Exception e) {
+            throw new InvalidParamException("Invalid property index");
+        }
     }
 }

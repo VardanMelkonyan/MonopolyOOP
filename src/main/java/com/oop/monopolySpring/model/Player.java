@@ -244,6 +244,7 @@ public class Player {
 
     // Method that helps player to pay charge
     public void charge(Property property) throws NotEnoughMoneyException {
+        System.out.println("For " + property.getName() + ", " + getName() + " was charged $" + property.getRent());
         int amount = property.getRent();
         System.out.println("You are on " + property.getOwner().getName() + "'s property, pay $" + amount);
         this.subtractBalance(amount, true);
